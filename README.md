@@ -59,3 +59,24 @@ venv\Scripts\activate
 
 ### Install Dependencies
 pip install -r requirements.txt
+
+
+
+## Project Structure
+
+```
+AI-Based-Anomaly-Detection-Platform
+│
+├── alerts/        # Email alert system
+├── backend/       # Flask backend APIs
+├── consumer/      # Kafka consumer for real-time data processing
+├── dashboard/     # Web dashboard interface
+├── database/      # Dataset and database scripts
+├── models/        # Machine learning models
+├── producer/      # Kafka producer for streaming patient vitals
+├── venv/          # Python virtual environment
+│
+├── dataset_validation.ipynb   # Dataset validation notebook
+├── requirements.txt           # Python dependencies
+├── README.md                  # Project documentation
+```
