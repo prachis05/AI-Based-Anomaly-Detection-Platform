@@ -14,7 +14,7 @@ conn = psycopg2.connect(
     host="localhost",
     database="healthcare_ai",
     user="postgres",
-    password="Curriculum1#"
+    password="YOUR PASSWORD HERE"
 )
 
 cursor = conn.cursor()
