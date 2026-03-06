@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>AI Healthcare Monitoring</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+body{
+background:#0f172a;
+font-family:Arial;
+color:white;
+margin:0;
+padding:0;
+}
+
+.header{
+text-align:center;
+padding:20px;
+font-size:28px;
+font-weight:bold;
+}
+
+.container{
+width:95%;
+margin:auto;
+}
+
+.cards{
+display:flex;
+justify-content:space-between;
+margin-bottom:30px;
+}
+
+.card{
+background:#1e293b;
+padding:20px;
+border-radius:10px;
+width:22%;
+text-align:center;
+}
+
+.card h3{
+margin:0;
+font-size:16px;
+color:#94a3b8;
+}
+
+.card p{
+font-size:28px;
+margin-top:10px;
+}
+
+.charts{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:20px;
+margin-bottom:30px;
+}
+
+.chart-box{
+background:#1e293b;
+padding:15px;
+border-radius:10px;
+}
+
+.chart-box h4{
+margin-bottom:10px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+background:#1e293b;
+}
+
+th,td{
+padding:10px;
+text-align:center;
+border-bottom:1px solid #334155;
+}
+
+.high{color:red;}
+.medium{color:orange;}
+.low{color:lime;}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+AI Healthcare Monitoring Dashboard
+</div>
+
+<div class="container">
+
+<div class="cards">
+
+<div class="card">
+<h3>Active Patients</h3>
+<p id="patients">0</p>
+</div>
+
+<div class="card">
+<h3>High Risk Alerts</h3>
+<p id="high">0</p>
+</div>
+
+<div class="card">
+<h3>Average Score</h3>
+<p id="avg">0</p>
+</div>
+
+<div class="card">
+<h3>Last Alert</h3>
+<p id="last">--</p>
+</div>
+
+</div>
+
+<div class="charts">
+
+<div class="chart-box">
+<h4>Anomaly Score Trend</h4>
+<canvas id="scoreChart"></canvas>
+</div>
+
+<div class="chart-box">
+<h4>Heart Rate</h4>
+<canvas id="hrChart"></canvas>
+</div>
+
+<div class="chart-box">
+<h4>SpO2 Levels</h4>
+<canvas id="spoChart"></canvas>
+</div>
+
+</div>
+
+<h3>Recent Anomalies</h3>
+
+<table>
+
+<thead>
+<tr>
+<th>Time</th>
+<th>Patient</th>
+<th>Score</th>
+<th>Severity</th>
+<th>Heart Rate</th>
+<th>SpO2</th>
+<th>Temp</th>
+<th>BP</th>
+</tr>
+</thead>
+
+<tbody id="tableBody">
+</tbody>
+
+</table>
+
+</div>
+
+<script>
+
+async function loadData(){
+
+const res=await fetch("/api/anomalies");
+const data=await res.json();
+
+document.getElementById("patients").innerText=
+new Set(data.map(d=>d.patient_id)).size;
+
+document.getElementById("high").innerText=
+data.filter(d=>d.severity=="HIGH").length;
+
+document.getElementById("avg").innerText=
+(data.reduce((a,b)=>a+b.score,0)/data.length).toFixed(2);
+
+document.getElementById("last").innerText=
+data[0].timestamp;
+
+const labels=data.map(d=>d.timestamp).reverse();
+
+const scores=data.map(d=>d.score).reverse();
+const hr=data.map(d=>d.heart_rate).reverse();
+const spo=data.map(d=>d.spo2).reverse();
+
+new Chart(scoreChart,{
+type:'line',
+data:{labels:labels,datasets:[{data:scores,borderColor:'cyan'}]}
+});
+
+new Chart(hrChart,{
+type:'line',
+data:{labels:labels,datasets:[{data:hr,borderColor:'red'}]}
+});
+
+new Chart(spoChart,{
+type:'line',
+data:{labels:labels,datasets:[{data:spo,borderColor:'lime'}]}
+});
+
+let rows="";
+
+data.forEach(d=>{
+rows+=`
+<tr>
+<td>${d.timestamp}</td>
+<td>${d.patient_id}</td>
+<td>${d.score.toFixed(2)}</td>
+<td class="${d.severity.toLowerCase()}">${d.severity}</td>
+<td>${d.heart_rate}</td>
+<td>${d.spo2}</td>
+<td>${d.temperature}</td>
+<td>${d.bp}</td>
+</tr>
+`;
+});
+
+tableBody.innerHTML=rows;
+
+}
+
+loadData()
+
+setInterval(loadData,5000)
+
+</script>
+
+</body>
+</html>
