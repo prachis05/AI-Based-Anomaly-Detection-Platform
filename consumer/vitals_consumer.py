@@ -25,9 +25,9 @@ print("Connected to PostgreSQL")
 # EMAIL CONFIGURATION
 # ------------------------------
 
-EMAIL_SENDER = "salunkheprachi05@gmail.com"
-EMAIL_PASSWORD = "ahnv sktm gzno hpxp"
-EMAIL_RECEIVER = "prachi.salunkhe23@vit.edu"
+EMAIL_SENDER = "SENDER'S EMAIL"
+EMAIL_PASSWORD = "YOUR PASSWORD HERE"
+EMAIL_RECEIVER = "RECEIVER'S EMAIL"
 
 
 def send_email_alert(patient_id, data, score, explanations):
