@@ -1,82 +1,239 @@
-# AI-Based Anomaly Detection Platform
+AI-Driven Healthcare Anomaly Detection Platform
+Overview
 
-## Project Overview
-The **AI-Based Anomaly Detection Platform** is a real-time healthcare monitoring system designed to detect abnormal patterns in patient vital signs and generate alerts.
+The AI-Driven Healthcare Anomaly Detection Platform is a real-time monitoring system designed to detect abnormal patterns in patient vital signs using machine learning. The system continuously streams patient physiological data, analyzes it using anomaly detection models, and provides alerts and visual monitoring through an interactive dashboard.
 
-The system continuously analyzes physiological data such as:
+Unlike traditional healthcare monitoring systems that rely on fixed thresholds, this platform applies machine learning techniques to detect unusual patterns in vital signs such as heart rate, oxygen saturation, temperature, and blood pressure.
 
-- Heart Rate
-- Oxygen Saturation (SpO₂)
-- Body Temperature
-- Blood Pressure
+The system integrates real-time data streaming, anomaly detection models, database storage, and a web dashboard to demonstrate how AI can assist in early detection of potential health risks.
 
-using **machine learning models**.
+Key Features
 
----
+Real-time patient vitals streaming using Apache Kafka
 
-## System Architecture
+Machine learning based anomaly detection using Isolation Forest
 
-Patient Vitals → Kafka Producer → Kafka Topic → Kafka Consumer → ML Model → PostgreSQL Database → Flask Backend → Dashboard & Email Alerts
+Sliding window analysis for temporal anomaly detection
 
----
+PostgreSQL database to store detected anomalies
 
-## Key Features
+Email alerts for high-risk anomalies
 
-- Real-time patient vitals streaming using **Apache Kafka**
-- Anomaly detection using **Isolation Forest** and **Autoencoder Neural Network**
-- Severity classification (**LOW, MEDIUM, HIGH**)
-- Data storage using **PostgreSQL**
-- Backend APIs built with **Flask**
-- Interactive dashboard for monitoring patient vitals
-- Automated email alerts for critical anomalies
+Interactive dashboard for monitoring patient health metrics
 
----
+Visualization of vital signs trends using Chart.js
 
-## Technologies Used
+REST API built with Flask
 
-- **Python** – Core programming language
-- **Apache Kafka** – Real-time data streaming
-- **PostgreSQL** – Database storage
-- **Flask** – Backend API and dashboard
-- **Scikit-learn** – Isolation Forest anomaly detection
-- **TensorFlow / Keras** – Autoencoder neural network
-- **Pandas / NumPy** – Data preprocessing
-- **Matplotlib** – Visualization support
+System Architecture
 
----
+The system follows a real-time data pipeline architecture:
 
-## Project Setup
+Patient Dataset
+      │
+      ▼
+Kafka Producer
+(Simulated Patient Vitals)
+      │
+      ▼
+Kafka Topic (patient_vitals)
+      │
+      ▼
+Kafka Consumer
+      │
+      ▼
+Machine Learning Model
+(Isolation Forest)
+      │
+      ▼
+Severity Classification
+      │
+      ▼
+PostgreSQL Database
+(anomaly_logs)
+      │
+      ▼
+Flask Backend API
+      │
+      ▼
+Real-Time Monitoring Dashboard
+Technologies Used
+Programming Language
 
-### Clone Repository
-git clone <repository-link>
+Python
 
-### Create Virtual Environment
-python -m venv venv
+Machine Learning
 
-### Activate Virtual Environment
-venv\Scripts\activate
+Scikit-learn (Isolation Forest)
 
+Data Processing
 
-### Install Dependencies
-pip install -r requirements.txt
+Pandas
 
+NumPy
 
+Streaming Platform
 
-## Project Structure
+Apache Kafka
 
-```
+Database
+
+PostgreSQL
+
+Backend
+
+Flask
+
+Visualization
+
+Chart.js
+
+Development Tools
+
+Visual Studio Code
+
+Git & GitHub
+
+Project Structure
 AI-Based-Anomaly-Detection-Platform
 │
-├── alerts/        # Email alert system
-├── backend/       # Flask backend APIs
-├── consumer/      # Kafka consumer for real-time data processing
-├── dashboard/     # Web dashboard interface
-├── database/      # Dataset and database scripts
-├── models/        # Machine learning models
-├── producer/      # Kafka producer for streaming patient vitals
-├── venv/          # Python virtual environment
+├── app
+│   └── app.py                # Flask backend
 │
-├── dataset_validation.ipynb   # Dataset validation notebook
-├── requirements.txt           # Python dependencies
-├── README.md                  # Project documentation
-```
+├── producer
+│   └── vitals_producer.py    # Kafka producer for streaming vitals
+│
+├── consumer
+│   └── vitals_consumer.py    # Kafka consumer + ML inference
+│
+├── models
+│   └── isolation_forest.pkl  # Trained anomaly detection model
+│
+├── database
+│   └── human_vital_signs_dataset_2024.csv
+│
+├── templates
+│   └── dashboard.html        # Monitoring dashboard UI
+│
+├── static
+│   └── style.css             # Dashboard styling
+│
+├── requirements.txt
+└── README.md
+Dataset
+
+The system uses the Human Vital Signs Dataset from Kaggle which contains simulated patient physiological data.
+
+Vital parameters include:
+
+Heart Rate
+
+Respiratory Rate
+
+Body Temperature
+
+Oxygen Saturation (SpO₂)
+
+Systolic Blood Pressure
+
+Diastolic Blood Pressure
+
+Derived HRV
+
+Derived MAP
+
+Dataset Source:
+
+https://www.kaggle.com/datasets/nasirayub2/human-vital-sign-dataset
+
+Machine Learning Model
+
+The anomaly detection component uses Isolation Forest, an unsupervised learning algorithm designed to detect anomalies by isolating rare patterns in data.
+
+Model Workflow
+
+Vital sign features are extracted
+
+Data is normalized using MinMaxScaler
+
+Sliding window captures temporal behavior
+
+Isolation Forest computes anomaly scores
+
+Severity levels are classified:
+
+Score Range	Severity
+> -0.02	LOW
+-0.02 to -0.06	MEDIUM
+< -0.06	HIGH
+Database Schema
+
+Detected anomalies are stored in a PostgreSQL table.
+
+Table: anomaly_logs
+
+Column	Description
+id	Primary key
+timestamp	Event time
+patient_id	Patient identifier
+anomaly_score	Model anomaly score
+severity	Risk level
+heart_rate	Heart rate
+spo2	Oxygen saturation
+temperature	Body temperature
+systolic_bp	Systolic blood pressure
+diastolic_bp	Diastolic blood pressure
+Dashboard
+
+The dashboard provides real-time visualization of patient health data.
+
+Displayed components:
+
+Active patient monitoring
+
+High-risk anomaly alerts
+
+Average anomaly score
+
+Vital sign trend charts
+
+Severity distribution
+
+Recent anomaly log table
+
+Running the Project
+1 Install Dependencies
+pip install -r requirements.txt
+2 Start Kafka Server
+kafka-server-start.bat config/server.properties
+3 Start Kafka Consumer
+python consumer/vitals_consumer.py
+4 Start Kafka Producer
+python producer/vitals_producer.py
+5 Run Flask Dashboard
+python app/app.py
+
+Then open:
+
+http://127.0.0.1:5000
+Example Use Cases
+
+Hospital patient monitoring systems
+
+ICU vital sign anomaly detection
+
+Early detection of physiological abnormalities
+
+Real-time healthcare analytics platforms
+
+Future Improvements
+
+Deep learning autoencoder based anomaly detection
+
+Real-time WebSocket streaming dashboard
+
+Patient-specific baseline models
+
+Integration with wearable health devices
+
+Explainable AI for anomaly reasoning
